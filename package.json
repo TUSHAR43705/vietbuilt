@@ -1,0 +1,25 @@
+{
+  "name": "proj",
+  "version": "1.0.0",
+  "description": "Community Crowdfunding DApp built with Web3",
+  "main": "code2.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o -c-1"
+  },
+  "keywords": [
+    "web3",
+    "crowdfunding",
+    "ethereum",
+    "dapp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "ethers": "^6.15.0"
+  }
+}

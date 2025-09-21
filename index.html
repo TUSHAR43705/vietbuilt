@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Crowdfunding DApp</title>
+
+  <!-- Link to your dark theme stylesheet -->
+  <link rel="stylesheet" href="dark-theme.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+      margin: 0; padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px; margin: 40px auto; background: #fff; border-radius: 8px; padding: 2em 3em; box-shadow: 0 4px 24px #0002;
+    }
+    .header { text-align:center; }
+    h2 { margin-bottom: 4px; letter-spacing: 1px; }
+    .wallet-section { margin: 10px 0 32px 0; }
+    #walletAddr { margin-left: 20px; color: #2196F3; }
+    input,button { font-size:1em; margin:2px; border-radius:4px; border:1px solid #ccc; padding:7px; }
+    button { background:#1976d2; color:white; cursor:pointer; border:none; }
+    button:disabled { opacity:0.6; cursor:not-allowed; }
+    td, th { text-align:center; padding:6px 2px;}
+    table { border-collapse:collapse; width:100%; margin-bottom:16px; }
+    th { background:#e4e9ee; }
+    tr:nth-child(even){background: #f4f9fc;}
+    #notification { position: fixed; top: 25px; right: 25px; background: #111; color: #fff; padding: 12px 20px; border-radius: 5px; z-index: 99;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>₿ Community Crowdfunding DApp Ξ</h2>
+      <div><small>Powered by Ethereum &amp; Ethers.js</small></div>
+    </div>
+
+    <div class="wallet-section">
+      <button id="connectBtn">Connect Wallet</button>
+      <span id="walletAddr"></span>
+    </div>
+
+    <div class="card">
+      <h3>₿ Blockchain Statistics Ξ</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalCampaigns">0</div>
+          <div class="stat-label">Total Campaigns</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalPledged">0 ETH</div>
+          <div class="stat-label">Total Pledged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="activeCampaigns">0</div>
+          <div class="stat-label">Active Campaigns</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="successRate">0%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>₿ Create Campaign Ξ</h3>
+      <div class="form-group">
+        <input id="goalInput" placeholder="Goal (ETH)" type="number" step="0.01" min="0.01"/>
+        <input id="durationInput" placeholder="Duration (seconds)" type="number" min="60"/>
+        <button id="createCampaignBtn" class="btn-primary">Create Campaign</button>
+      </div>
+      <div id="createMsg"></div>
+    </div>
+
+    <div class="card">
+      <h3>₿ All Campaigns Ξ</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Creator</th>
+              <th>Goal (ETH)</th>
+              <th>Pledged (ETH)</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Pledge</th>
+              <th>Claim</th>
+              <th>Refund</th>
+            </tr>
+          </thead>
+          <tbody id="campaignRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- The notification area (hidden by default) -->
+  <div id="notification" style="display:none"></div>
+
+  <!-- Help Section -->
+  <div class="help-section">
+    <button class="help-btn" onclick="toggleHelp()">?</button>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="help-modal">
+    <div class="help-content">
+      <button class="help-close" onclick="toggleHelp()">&times;</button>
+      <h3>₿ DApp Guide Ξ</h3>
+      <div style="margin-top: 20px;">
+        <h4>How to Use:</h4>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li><strong>Connect Wallet:</strong> Click to connect your MetaMask wallet</li>
+          <li><strong>Create Campaign:</strong> Set goal in ETH and duration in seconds</li>
+          <li><strong>Pledge:</strong> Support campaigns by sending ETH</li>
+          <li><strong>Claim:</strong> Campaign creators can claim funds if goal is met</li>
+          <li><strong>Refund:</strong> Get your ETH back if campaign fails</li>
+        </ul>
+        <h4>Blockchain Features:</h4>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Decentralized crowdfunding on Ethereum</li>
+          <li>Smart contract automation</li>
+          <li>Transparent and secure transactions</li>
+          <li>No intermediaries required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load ethers from CDN, then your scripts -->
+  <script type="module" src="app.js"></script>
+  <script src="code4.js"></script>
+  
+  <script>
+    // Help modal functionality
+    function toggleHelp() {
+      const modal = document.getElementById('helpModal');
+      modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('helpModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        toggleHelp();
+      }
+    });
+    
+    // Add crypto-themed loading animations
+    function addCryptoEffects() {
+      // Add pulsing effect to stat cards
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.2}s`;
+        card.classList.add('stat-card');
+      });
+      
+      // Add glitch effect to header on load
+      const header = document.querySelector('.header h2');
+      setTimeout(() => {
+        header.classList.add('glitch');
+        setTimeout(() => {
+          header.classList.remove('glitch');
+        }, 2000);
+      }, 1000);
+    }
+    
+    // Initialize effects when page loads
+    document.addEventListener('DOMContentLoaded', addCryptoEffects);
+  </script>
+</body>
+</html>
